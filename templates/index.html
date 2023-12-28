@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyPenny - Credit Card Expert</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div id="initial-state">
+        <header>
+            <h1>MoneyPenny AI &#128179;</h1>
+            <h2>Ask me anything about credit cards</h2>
+            <p>I'm your credit card expert trained with data on 100+ US credit cards</p>
+        </header>
+        <div id="initial-input-container">
+            <!-- This input field is for the initial state -->
+            <input type="text" id="initial-user-input" placeholder="Type your question">
+            <button id="initial-send-btn">&#10140;</button> <!-- Unicode right-pointing arrow -->
+            <div id="initial-suggestion-container">
+                <p id="prompt-suggestion1">✈️ Which are the best travel credit cards?</p>
+                <p id="prompt-suggestion2">🛍️ Which is the best card for groceries?</p>
+                <p id="prompt-suggestion3">📈 Best cards to improve my credit score</p>
+            </div>
+        </div>
+    </div>
+    <div id="chat-container" class="hidden">
+        <div id="chat-box">
+            <!-- Messages will be appended here -->
+            <div id="loading-spinner" class="hidden">
+                <div class="spinner"></div>
+                <p>Crunching credit card data for you...</p>
+            </div>
+        </div>
+        <!-- Container for prompt suggestions -->
+        <div id="prompt-suggestions-container"></div>
+        
+        <div id="message-input-container">
+            <!-- This input field is for the chat interface -->
+            <input type="text" id="chat-user-input" placeholder="Type your question">
+            <button id="send-btn">&#10140;</button> <!-- Unicode right-pointing arrow -->
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
