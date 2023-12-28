@@ -8,9 +8,10 @@ import re
 # Global variables 
 message_history = [] #store message history
 
-global thread_id
 
 app = Flask(__name__)
+
+global thread_id
 
 # Load environment variables from .env file
 load_dotenv()
