@@ -5,9 +5,10 @@ from dotenv import load_dotenv
 import time
 import re
 
-# Global variable to store message history
-message_history = []
+# Global variables 
+message_history = [] #store message history
 
+global thread_id
 
 app = Flask(__name__)
 
@@ -126,8 +127,6 @@ def send_message():
         "role": "user",
         "content": user_message
     })
-
-    global thread_id
 
     if not create_message(thread_id, user_message):
         return jsonify({'reply': "Failed to create message."}), 500
