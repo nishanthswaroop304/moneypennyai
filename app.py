@@ -4,6 +4,10 @@ import os
 from dotenv import load_dotenv
 import time
 import re
+import logging
+
+# Set up basic logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Global variables 
 message_history = [] #store message history
@@ -21,6 +25,7 @@ load_dotenv()
 # Retrieve your OpenAI API key
 api_key = os.getenv('OPENAI_API_KEY')
 if api_key is None:
+    app.logger.error("The OPENAI_API_KEY environment variable is not set.")
     raise ValueError("The OPENAI_API_KEY environment variable is not set.")
 
 # Set the headers
@@ -37,11 +42,11 @@ def create_thread():
     thread_response = requests.post(thread_url, headers=headers)
     if thread_response.status_code == 200:
         thread_id = thread_response.json()['id']
+        app.logger.debug(f"Thread created with ID: {thread_id}")
         return thread_id
     else:
-        print(f"Failed to create thread. Status code: {thread_response.status_code}")
-        print("Response:")
-        print(thread_response.json())
+        app.logger.error(f"Failed to create thread. Status code: {thread_response.status_code}")
+        app.logger.error(f"Response: {thread_response.json()}")
         return None
     
 def get_prompt_suggestions(ai_response):
@@ -117,6 +122,7 @@ def fetch_thread_messages(thread_id):
 # Endpoint to render the chat interface
 @app.route('/')
 def index():
+    app.logger.debug("Rendering index page")
     return render_template('index.html')
 
 # Endpoint to receive messages from the UI and send responses
@@ -125,6 +131,7 @@ def send_message():
     global message_history
     data = request.json
     user_message = data['message']
+    app.logger.debug(f"Received message: {user_message}")
 
     # Add the user's message to the message history
     message_history.append({
@@ -177,6 +184,7 @@ def send_message():
 if __name__ == '__main__':
     thread_id = create_thread()  # Create a thread when the server starts
     if thread_id is None:
+        app.logger.error("Failed to create an initial thread.")
         raise RuntimeError("Failed to create an initial thread.")
 
     app.run(debug=True)
