@@ -35,19 +35,25 @@ headers = {
     "OpenAI-Beta": "assistants=v1"
 }
 
-# Create a thread
 def create_thread():
     global thread_id  # Use the global thread_id variable
     thread_url = "https://api.openai.com/v1/threads"
-    thread_response = requests.post(thread_url, headers=headers)
-    if thread_response.status_code == 200:
-        thread_id = thread_response.json()['id']
-        app.logger.debug(f"Thread created with ID: {thread_id}")
-        return thread_id
-    else:
-        app.logger.error(f"Failed to create thread. Status code: {thread_response.status_code}")
-        app.logger.error(f"Response: {thread_response.json()}")
+
+    try:
+        thread_response = requests.post(thread_url, headers=headers)
+
+        if thread_response.status_code == 200:
+            thread_id = thread_response.json()['id']
+            app.logger.debug(f"Thread created with ID: {thread_id}")
+            return thread_id
+        else:
+            app.logger.error(f"Failed to create thread. Status code: {thread_response.status_code}")
+            app.logger.error(f"Response: {thread_response.json()}")
+            return None
+    except Exception as e:
+        app.logger.error(f"Exception occurred while creating thread: {e}")
         return None
+
     
 def get_prompt_suggestions(ai_response):
     global message_history  # Access the global message history
