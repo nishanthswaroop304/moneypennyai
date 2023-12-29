@@ -5,9 +5,14 @@ from dotenv import load_dotenv
 import time
 import re
 import logging
+import redis
 
 # Set up basic logging
 logging.basicConfig(level=logging.DEBUG)
+
+# Set up Redis client
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
+redis_client = redis.Redis.from_url(redis_url)
 
 # Global variables 
 message_history = [] #store message history
@@ -44,6 +49,8 @@ def create_thread():
 
         if thread_response.status_code == 200:
             thread_id = thread_response.json()['id']
+            # Store thread_id in Redis
+            redis_client.set('thread_id', thread_id)
             app.logger.debug(f"Thread created with ID: {thread_id}")
             return thread_id
         else:
@@ -145,16 +152,25 @@ def send_message():
         "content": user_message
     })
 
-    if not create_message(thread_id, user_message):
+    # Retrieve the current thread ID from Redis
+    current_thread_id = get_thread_id()
+    if current_thread_id is None:
+        app.logger.error("No thread ID found. Creating a new thread.")
+        current_thread_id = create_thread()
+        if current_thread_id is None:
+            return jsonify({'reply': "Failed to create thread."}), 500
+
+    # Use the current_thread_id in your logic
+    if not create_message(current_thread_id, user_message):
         return jsonify({'reply': "Failed to create message."}), 500
 
-    run_id = create_run(thread_id)
+    run_id = create_run(current_thread_id)
     if run_id is None:
         return jsonify({'reply': "Failed to create run."}), 500
 
     # Wait for the run to complete
     while True:
-        run_status = fetch_run_status(thread_id, run_id)
+        run_status = fetch_run_status(current_thread_id, run_id)
         if run_status is None or run_status['status'] in ['failed', 'cancelled']:
             return jsonify({'reply': "Run did not complete successfully."}), 500
 
@@ -164,7 +180,7 @@ def send_message():
         time.sleep(2)  # Polling interval
 
     # Fetch and return the latest assistant message
-    messages = fetch_thread_messages(thread_id)
+    messages = fetch_thread_messages(current_thread_id)
     if messages:
         for message in messages['data']:
             if message['role'] == 'assistant':
@@ -175,7 +191,7 @@ def send_message():
                         # Add the AI's response to the message history
                         message_history.append({"role": "assistant", "content": ai_response})
 
-                        # Get prompt suggestions and log to the terminal
+                        # Get prompt suggestions
                         suggestions_content = get_prompt_suggestions(ai_response)
 
                         # Add the prompt suggestions to the message history
@@ -185,6 +201,21 @@ def send_message():
                         return jsonify({'reply': ai_response, 'suggestions': suggestions_content})
 
     return jsonify({'reply': "No response from assistant."}), 500
+
+def get_thread_id():
+    try:
+        # Attempt to fetch the thread_id from Redis
+        thread_id = redis_client.get('thread_id')
+
+        # The get method returns a byte string, so decode it to a string
+        if thread_id is not None:
+            return thread_id.decode('utf-8')
+        else:
+            return None
+    except Exception as e:
+        app.logger.error(f"Error occurred while retrieving thread_id from Redis: {e}")
+        return None
+
 
 
 if __name__ == '__main__':
