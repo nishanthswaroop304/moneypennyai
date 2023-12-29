@@ -8,10 +8,12 @@ import re
 # Global variables 
 message_history = [] #store message history
 
+# Global variable declaration
+global thread_id
+thread_id = None
+
 
 app = Flask(__name__)
-
-global thread_id
 
 # Load environment variables from .env file
 load_dotenv()
@@ -30,6 +32,7 @@ headers = {
 
 # Create a thread
 def create_thread():
+    global thread_id  # Use the global thread_id variable
     thread_url = "https://api.openai.com/v1/threads"
     thread_response = requests.post(thread_url, headers=headers)
     if thread_response.status_code == 200:
