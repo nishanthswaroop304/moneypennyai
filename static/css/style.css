@@ -207,7 +207,7 @@ header p {
     align-items: center; /* Centers content horizontally */
     height: 100vh; /* Full height of the viewport */
     text-align: center;
-    margin-top: -50px; /* Shifts the content upwards */
+    margin-top: 0; /* Adjust this value as needed */
 }
 
 #initial-input-container {
@@ -267,6 +267,9 @@ header p {
     padding: 10px 15px; /* Padding inside each pill */
     margin: 5px; /* Margin to create space between pills */
     cursor: pointer; /* Change cursor on hover */
+    flex-grow: 1; /* Allow pills to grow and fill the container */
+    text-align: center; /* Center text inside pill */
+    font-size: 0.8em; /* Scaled down font size */
     flex-grow: 1; /* Allow pills to grow and fill the container */
     text-align: center; /* Center text inside pill */
     font-size: 0.8em; /* Scaled down font size */
@@ -344,7 +347,16 @@ header p {
         width: 90%; /* Adjust width for smaller screens */
     }
     #initial-state {
-        margin-top: -30px; /* Lesser shift for smaller screens */
+        margin-top: 0; /* Adjust or remove negative margin for smaller screens */
+    }
+    #prompt-suggestions-container {
+        flex-direction: column; /* Stack items vertically */
+        align-items: stretch; /* Stretch items to fill the width */
+    }
+
+    #prompt-suggestions-container p {
+        margin-bottom: 10px; /* Add some space between stacked pills */
+        flex-basis: auto; /* Reset flex-basis to default for stacking */
     }
     /* Adjustments for smaller screens */
 }

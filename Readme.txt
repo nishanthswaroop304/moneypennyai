@@ -1,0 +1,1 @@
+Includes credit card data organized by card types (Travel, Rewards, Credit builder/Secured, Rent)

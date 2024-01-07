@@ -71,7 +71,13 @@ def get_prompt_suggestions(ai_response):
         "messages": message_history + [
             {
                 "role": "system",
-                "content": "You are an expert in crafting concise follow-up questions. Your task is to analyze responses provided by a credit card picker chatbot, as shared by the user. Imagine yourself as a curious user and generate three numbered follow-up questions. Each question should be direct and limited to a maximum of seven words."
+                "content": (
+            "Below is a response from a credit card advisor chatbot. Based on this response, ALWAYS generate three potential follow-up "
+            "inquiries or statements that a user could ask or say to the chatbot. These follow-ups should be relevant to the "
+            "content of the chatbot's response, aimed at helping the user to delve deeper into the advice given or to clarify"
+            "specific points in less than 10 words. The follow-ups can be either questions or statements, but they should be brief and to the point. "
+            "Please format the output as three numbered items: 1, 2, and 3."
+            )
             },
             {
                 "role": "user",
