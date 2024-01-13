@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     addSuggestionListener('prompt-suggestion1', "Top travel credit cards");
-    addSuggestionListener('prompt-suggestion2', "Cards with high cashback on groceries");
+    addSuggestionListener('prompt-suggestion2', "High cashback grocery cards");
     addSuggestionListener('prompt-suggestion3', "Cards designed for building credit");
 
     function appendMessage(role, text) {
