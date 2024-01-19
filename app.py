@@ -6,6 +6,8 @@ import time
 import re
 import logging
 import redis
+from flask import Flask
+from flask_cors import CORS
 
 # Set up basic logging
 logging.basicConfig(level=logging.DEBUG)
@@ -23,6 +25,8 @@ thread_id = None
 
 
 app = Flask(__name__)
+
+CORS(app)  # This enables CORS for all routes
 
 # Load environment variables from .env file
 load_dotenv()
