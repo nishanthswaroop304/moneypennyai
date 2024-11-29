@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    addSuggestionListener('prompt-suggestion1', "Top travel credit cards");
-    addSuggestionListener('prompt-suggestion2', "High cashback grocery cards");
+    addSuggestionListener('prompt-suggestion1', "Top travel credit cards for a monthly travel budget of $500");
+    addSuggestionListener('prompt-suggestion2', "High cashback grocery cards for $200 monthly spend");
     addSuggestionListener('prompt-suggestion3', "Cards designed for building credit");
 
     function appendMessage(role, text) {
